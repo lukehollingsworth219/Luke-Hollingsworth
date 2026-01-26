@@ -1,0 +1,1155 @@
+<!doctype html>
+<html lang="en" data-theme="auto">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>1983 Celica Supra — Project</title>
+  <meta name="description" content="1983 Celica Supra build: suspension, fabrication, track prep, and engineering notes." />
+  <link rel="icon" href="/favicon.ico" />
+  <style>
+    :root{
+      --cal-blue:#003262;
+      --cal-gold:#FDB515;
+
+      --bg:#071019;
+      --bg-soft:#0c1520;
+      --surface:#0f1a29;
+
+      --text:#eaf2ff;
+      --text-dim:#b8c6dd;
+      --ring: color-mix(in lab, var(--cal-gold) 65%, white);
+
+      --maxw: 1050px;
+      --radius: 18px;
+      --shadow: 0 18px 40px rgba(0,0,0,.35);
+    }
+    /* ===== Lightbox ===== */
+#lightbox{
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 8, 18, 0.92);
+  backdrop-filter: blur(6px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+#lightbox.active{
+  display: flex;
+}
+
+#lightboxContent{
+  max-width: 92vw;
+  max-height: 92vh;
+}
+
+#lightboxContent{
+  width: min(92vw, 1200px);
+  height: 92vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#lightboxContent img,
+#lightboxContent video{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;      /* KEY: show the whole image */
+  object-position: center;  /* center it */
+  border-radius: 14px;
+  box-shadow: 0 30px 80px rgba(0,0,0,.6);
+}
+
+
+#lightboxContent video{
+  background: black;
+}
+
+#lightboxClose{
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+}
+/* Make button look like your gold links */
+.linklike{
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--cal-gold);
+  font-weight: 700;
+  border-bottom: 2px solid transparent;
+  font: inherit;
+}
+.linklike:hover{
+  color: var(--cal-blue);
+  border-bottom-color: color-mix(in lab, var(--cal-blue) 50%, transparent);
+}
+
+/* Modal */
+.modal{
+  position: fixed;
+  inset: 0;
+  display: none;
+  place-items: center;
+  z-index: 999;
+  padding: 18px;
+  background: rgba(0,0,0,.65);
+  backdrop-filter: blur(8px);
+}
+.modal[aria-hidden="false"]{ display: grid; }
+
+.modal-card{
+  width: min(920px, 96vw);
+  max-height: 86vh;
+  overflow: auto;
+  background: var(--surface);
+  border-radius: 18px;
+  box-shadow: 0 30px 80px rgba(0,0,0,.6);
+  outline: 1px solid color-mix(in lab, var(--text) 12%, transparent);
+  position: relative;
+  padding: 18px;
+}
+
+.modal-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.modal-head h3{ margin: 0; }
+.modal-close{
+  border: 1px solid color-mix(in lab, var(--text) 14%, transparent);
+  background: color-mix(in lab, var(--surface) 92%, transparent);
+  color: var(--text);
+  padding: 8px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 800;
+}
+.modal-close:hover{ transform: translateY(-1px); }
+
+.checklist{
+  margin: 0;
+  padding-left: 18px;
+}
+.checklist li{ margin: 8px 0; color: var(--text-dim); }
+.checklist li strong{ color: var(--text); }
+
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f7f8fb;
+        --bg-soft:#eef2f8;
+        --surface:#ffffff;
+        --text:#0b1220;
+        --text-dim:#4b5563;
+        --shadow: 0 12px 28px rgba(2,6,23,.08);
+      }
+    }
+    .gallery-grid{
+  margin-top: 14px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (min-width: 700px){
+  .gallery-grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 1100px){
+  .gallery-grid{ grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+.gallery-item{
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #000;
+  outline: 1px solid color-mix(in lab, var(--text) 12%, transparent);
+  box-shadow: var(--shadow);
+}
+
+.gallery-item img{
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+  transform: scale(1.01);
+}
+
+.gallery-item:hover img{
+  transform: scale(1.04);
+  transition: transform 200ms ease;
+}
+
+.gallery-caption{
+  position: absolute;
+  left: 10px; right: 10px; bottom: 10px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  background: color-mix(in lab, var(--bg) 55%, transparent);
+  border: 1px solid color-mix(in lab, var(--text) 14%, transparent);
+  backdrop-filter: blur(8px);
+  color: var(--text);
+}
+.gallery-item video{
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+  background: #000;
+}
+
+
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 500px at 10% -10%, color-mix(in lab, var(--cal-blue) 24%, transparent), transparent 55%),
+        radial-gradient(900px 400px at 90% -10%, color-mix(in lab, var(--cal-gold) 22%, transparent), transparent 55%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
+      line-height:1.6;
+    }
+    a{color:inherit;text-decoration:none}
+    .container{max-width:var(--maxw);margin:0 auto;padding:24px}
+
+    header{
+      position: sticky; top:0; z-index:20;
+      backdrop-filter: blur(10px);
+      background: color-mix(in lab, var(--bg) 70%, transparent);
+      border-bottom: 1px solid color-mix(in lab, var(--text) 12%, transparent);
+    }
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 24px;max-width:var(--maxw);margin:0 auto}
+    .back{
+      font-weight:700;
+      color: var(--cal-gold);
+    }
+    .back:hover{color:var(--cal-blue);text-decoration:underline}
+    .pill{
+      font-size:12px; letter-spacing:.12em; text-transform:uppercase;
+      color: var(--cal-gold);
+      background: color-mix(in lab, var(--cal-gold) 12%, transparent);
+      border:1px solid color-mix(in lab, var(--cal-gold) 40%, transparent);
+      padding: 6px 10px; border-radius: 999px;
+    }
+
+    .hero{
+      padding: 28px 0 10px;
+      display:grid;
+      gap:16px;
+    }
+    .title{margin:0; font-size: clamp(30px, 3vw + 14px, 48px); line-height:1.1}
+    .meta{margin:0;color:var(--text-dim)}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+    .chip{
+      font-size:13px; padding:6px 10px; border-radius:999px;
+      background: color-mix(in lab, var(--cal-blue) 14%, transparent);
+      border:1px solid color-mix(in lab, var(--cal-blue) 45%, transparent);
+    }
+    .chip.gold{
+      background: color-mix(in lab, var(--cal-gold) 22%, transparent);
+      border-color: color-mix(in lab, var(--cal-gold) 55%, transparent);
+      color:#1a1400;
+    }
+    .callout {
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: color-mix(in lab, var(--cal-gold) 12%, transparent);
+    border: 1px solid color-mix(in lab, var(--cal-gold) 40%, transparent);
+    }
+
+    /* ===== Carousel ===== */
+    .carousel{
+      margin-top: 8px;
+      margin-bottom: 28px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      outline: 1px solid color-mix(in lab, var(--text) 12%, transparent);
+      position: relative;
+    }
+    .carousel::before{
+      content:"";
+      position:absolute; inset:-1px;
+      border-radius: calc(var(--radius) + 2px);
+      padding:1px;
+      background: linear-gradient(120deg, var(--cal-gold), var(--cal-blue));
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events:none;
+    }
+    
+    .viewport {
+    position: relative;
+    width: 100%;
+  aspect-ratio: 16 / 9;   /* or 4 / 3 if your photos are more vertical */
+  overflow: hidden;
+  background: #000;
+    }
+    .track {
+  display: flex;
+  height: 100%;
+  gap: 0;                 /* ensure no spacing */
+  will-change: transform;
+}
+
+    .slide {
+    margin: 0;              /* important */
+    min-width: 100%;
+    height: 100%;
+    position: relative;
+    }
+    .slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;      /* crops to fill */
+    object-position: center;/* centers crop */
+    display: block;
+    background: #000;       /* avoids weird transparency edges */
+}
+    .caption{
+      position:absolute;
+      left:12px; right:12px; bottom:12px;
+      padding:10px 12px;
+      border-radius: 14px;
+      background: color-mix(in lab, var(--bg) 55%, transparent);
+      border:1px solid color-mix(in lab, var(--text) 16%, transparent);
+      backdrop-filter: blur(8px);
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .controls{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding: 12px;
+    }
+    .btn{
+      border:1px solid color-mix(in lab, var(--text) 14%, transparent);
+      background: color-mix(in lab, var(--surface) 92%, transparent);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      font-weight:700;
+    }
+    .btn:hover{transform: translateY(-1px)}
+    .btn:focus-visible{outline:3px solid var(--ring); outline-offset:2px}
+    .dots{display:flex; gap:8px; align-items:center; justify-content:center; flex:1}
+    .dot{
+      width:5px; height:5px; border-radius:999px;
+      border:1px solid color-mix(in lab, var(--text) 25%, transparent);
+      background: color-mix(in lab, var(--cal-blue) 18%, transparent);
+      cursor:pointer;
+    }
+    .dot.active{
+      background: var(--cal-gold);
+      border-color: color-mix(in lab, var(--cal-gold) 70%, transparent);
+      box-shadow: 0 0 0 4px color-mix(in lab, var(--cal-gold) 18%, transparent);
+    }
+    
+
+    /* ===== Sections ===== */
+    .grid{
+      margin-top: 20px;
+      display:grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 900px){
+      .grid{grid-template-columns: 1.2fr .8fr}
+    }
+
+    .panel{
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+      outline: 1px solid color-mix(in lab, var(--text) 12%, transparent);
+    }
+    .panel h2 { margin-bottom: 10px; }
+
+    .panel p {
+      margin: 0 0 14px;
+      max-width: 62ch;      /* nicer line length */
+      line-height: 1.75;    /* more breathing room */
+}
+    .overview-panel p {
+      max-width: none;
+    }
+    .panel p:last-child { margin-bottom: 0; }
+
+    .panel {
+    padding: 22px;        /* a bit more padding */
+    }
+    .specs { margin: 0; padding-left: 18px; }
+    .specs li { margin: 10px 0; color: var(--text-dim); }
+    .specs strong { color: var(--text); }
+
+/* Optional: nicer reading width inside the full-width overview */
+
+    /*.panel h2{margin:0 0 8px}
+    .panel p{margin:0 0 10px; color:var(--text-dim)}
+*/
+    .work{
+      margin-top: 18px;
+      display:grid;
+      gap: 14px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 780px){
+      .work{grid-template-columns: 1fr 1fr}
+    }
+    .workcard{
+      background: var(--surface);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+      outline: 1px solid color-mix(in lab, var(--text) 12%, transparent);
+      position:relative;
+      overflow:hidden;
+    }
+    .workcard::after{
+      content:"";
+      position:absolute; inset:0;
+      background: radial-gradient(350px 120px at 10% 0%, color-mix(in lab, var(--cal-gold) 18%, transparent), transparent 60%);
+      pointer-events:none;
+    }
+    .workcard h3{margin:0 0 6px}
+    .workcard p{margin:0;color:var(--text-dim)}
+    .worklinks{margin-top:10px; display:flex; gap:10px; flex-wrap:wrap}
+    .worklinks a{
+      color: var(--cal-gold);
+      font-weight:700;
+      border-bottom: 2px solid transparent;
+    }
+    .worklinks a:hover{color:var(--cal-blue); border-bottom-color: color-mix(in lab, var(--cal-blue) 50%, transparent)}
+
+    footer{
+      margin-top: 28px;
+      padding: 24px;
+      text-align:center;
+      color: var(--text-dim);
+      border-top: 3px solid color-mix(in lab, var(--cal-gold) 35%, transparent);
+    }
+
+    :focus-visible{outline:3px solid var(--ring); outline-offset:3px; border-radius:10px}
+    @media (prefers-reduced-motion: reduce){
+      *{transition:none!important; animation:none!important}
+    }
+    .modal{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+  backdrop-filter: blur(6px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal[aria-hidden="false"]{
+  display: flex;
+}
+
+.modal-card{
+  background: var(--surface);
+  border-radius: 18px;
+  padding: 18px;
+  width: min(900px, 92vw);
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow);
+  outline: 1px solid color-mix(in lab, var(--text) 12%, transparent);
+}
+
+.modal-head{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.modal-close{
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--text-dim);
+}
+.modal-close:hover{
+  color: var(--text);
+}
+.gallery-item img,
+.gallery-item video{
+  cursor: zoom-in;
+}
+
+  </style>
+</head>
+<!-- LIGHTBOX -->
+<div id="lightbox" aria-hidden="true">
+    <button id="lightboxClose" aria-label="Close">✕</button>
+    <div id="lightboxContent"></div>
+  </div>
+
+<body>
+  <header>
+    <nav class="nav">
+      <a class="back" href="index.html">← Home</a>
+      <span class="pill">1983 Celica Supra</span>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- HERO -->
+    <section class="hero" aria-labelledby="title">
+      <h1 class="title" id="title">1983 Celica Supra — Track & Build Notes</h1>
+      <p class="meta">Focus: suspension + fabrication + track prep • Documenting iterations, test days, and lessons learned.</p>
+
+      <div>
+        <strong>Skills learned:</strong>
+        <div class="chips" aria-label="Skills learned">
+          <span class="chip gold">Track alignment (camber/toe)</span>
+          <span class="chip">Chassis stiffness / bracing</span>
+          <span class="chip">Brake/thermal management</span>
+          <span class="chip gold">CAD → fabrication workflow</span>
+          <span class="chip">Data logging & iteration</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- CAROUSEL -->
+    <section class="carousel" aria-label="Photo gallery">
+      <div class="viewport" id="viewport">
+        <div class="track" id="track">
+          <!-- Replace these images with yours -->
+          <figure class="slide">
+            <img src="images/Supra1.jpeg" alt="Celica Supra front 3/4 view" />
+            <figcaption class="caption">First Track Day Laguna Seca 12/21/25</figcaption>
+          </figure>
+          <figure class="slide">
+            <img src="images/Supra2.jpeg" alt="Suspension or wheel setup close-up" />
+            <figcaption class="caption">Additional 12/21/25</figcaption>
+          </figure>
+          <figure class="slide">
+            <img src="images/Supra3.jpeg" alt="Fabricated strut brace or chassis bracing" />
+            <figcaption class="caption">Additional 12/21/25</figcaption>
+          </figure>
+          <figure class="slide">
+            <img src="images/Supra6.jpeg" alt="Interior or engine bay detail" />
+            <figcaption class="caption">Restoration Work - Steering Rack Replacement</figcaption>
+          </figure>
+          <figure class="slide">
+            <img src="images/Supra7.jpeg" alt="Celica Supra front 3/4 view" />
+            <figcaption class="caption">Upgrade Work - Large Adjustable Swaybar Install</figcaption>
+          </figure>
+          <figure class="slide">
+            <img src="images/Supra4.jpeg" alt="Suspension or wheel setup close-up" />
+            <figcaption class="caption">Restoration Work - Newer 7mge Motor Pulled from a 1989 Toyota Cressida</figcaption>
+          </figure>
+          <figure class="slide">
+            <img src="images/Supra8.jpeg" alt="Fabricated strut brace or chassis bracing" />
+            <figcaption class="caption">CAD Work - 3D printed Switchpanel for headlights and fog lights</figcaption>
+          </figure>
+          <figure class="slide">
+            <img src="images/Supra5.jpeg" alt="Interior or engine bay detail" />
+            <figcaption class="caption">Restoration Work - Installed Switchpanel</figcaption>
+          </figure>
+          <figure class="slide">
+            <img src="images/Supra20.jpeg" alt="Celica Supra front 3/4 view" />
+            <figcaption class="caption">Custom 3D Printed Switchpanel Installed for fog lights and headlights</figcaption>
+          </figure>
+          <figure class="slide">
+            <img src="images/Supra10.jpeg" alt="Suspension or wheel setup close-up" />
+            <figcaption class="caption">Restoration - Tie Rod Install & Wheel Bearing Regrease</figcaption>
+          </figure>
+          <figure class="slide">
+            <img src="images/Supra11.jpeg" alt="Fabricated strut brace or chassis bracing" />
+            <figcaption class="caption">Upgrade Work - Mount & Bracket Install of custom welded seat bracket for race seats</figcaption>
+          </figure>
+          <figure class="slide">
+            <img src="images/Supra12.jpeg" alt="Interior or engine bay detail" />
+            <figcaption class="caption">Restoration Work - Removal of Dashboard for Dash Cap Install</figcaption>
+          </figure>
+          <figure class="slide">
+            <img src="images/Supra13.jpeg" alt="Celica Supra front 3/4 view" />
+            <figcaption class="caption">Track day Prep — Fluid Flush for Track Day</figcaption>
+          </figure>
+          <figure class="slide">
+            <img src="images/Supra14.jpeg" alt="Suspension or wheel setup close-up" />
+            <figcaption class="caption">Restoration - Fog Light Rewiring.</figcaption>
+          </figure>
+          <figure class="slide">
+            <img src="images/Supra15.jpeg" alt="Fabricated strut brace or chassis bracing" />
+            <figcaption class="caption">Restoration — ECU Wiring to adapt newer 7mge motor to work with body harness</figcaption>
+          </figure>
+          <figure class="slide">
+            <img src="images/Supra16.jpeg" alt="Interior or engine bay detail" />
+            <figcaption class="caption">Upgrade Work - Extended Lug Studs for Wheel Upgrade and minor front spacer</figcaption>
+          </figure>
+          <figure class="slide">
+            <img src="images/Supra17.jpeg" alt="Suspension or wheel setup close-up" />
+            <figcaption class="caption">Snow Day in Santa Cruz California!</figcaption>
+          </figure>
+          <figure class="slide">
+            <img src="images/Supra18.jpeg" alt="Fabricated strut brace or chassis bracing" />
+            <figcaption class="caption">Upgrade Work - Racing Seat Install</figcaption>
+          </figure>
+          <figure class="slide">
+            <img src="images/Supra19.jpeg" alt="Interior or engine bay detail" />
+            <figcaption class="caption">Restoration - 7mge Wiring Diagram for Engine Swap</figcaption>
+          </figure>
+          <figure class="slide">
+            <img src="images/Supra9.jpeg" alt="Celica Supra front 3/4 view" />
+            <figcaption class="caption">Restoration — 4.10 Differential Restore to replace worn diff</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn" id="prevBtn" aria-label="Previous photo">←</button>
+        <div class="dots" id="dots" aria-label="Gallery navigation dots"></div>
+        <button class="btn" id="nextBtn" aria-label="Next photo">→</button>
+      </div>
+    </section>
+
+    <!-- OVERVIEW + SPECS -->
+    <!-- OVERVIEW (full width) -->
+<section aria-label="Overview">
+    <article class="panel overview-panel">
+      <h2>Overview</h2>
+  
+      <p>
+        This build is about making an older platform genuinely fast and reliable on track, not just modified. The goal is to run competitive lap times against newer MX-5s, BMWs, and Porsches, cars that are far newer costing several times more. This will be acheived through a focus on chassis setup, reliability, and cornering stability rather than chasing power alone.
+      </p>
+  
+      <p>
+        The work combines performance upgrades (newer engine, coilovers, custom strut brace, adjustable sway bars, race brake pads) with restoration-driven fixes like bushing replacement and a differential rebuild to bring the car back to a predictable baseline. From there, each change is treated as an experiment: design, build, test, and iterate.
+      </p>
+  
+      <p>
+        This Supra is both a learning platform and a testbed for ideas—whether that’s CAD-designed parts, 3D-printed prototypes, welded fabrication, or setup changes validated through seat time.
+      </p>
+  
+      <p class="callout">
+        <strong>Result:</strong> improved stability at speed, more consistent turn-in, and better braking confidence.
+      </p>
+    </article>
+  </section>
+  
+  <!-- BUILD SNAPSHOT (below) -->
+  <section aria-label="Build snapshot" style="margin-top:16px;">
+    <aside class="panel">
+      <h2>Build Snapshot</h2>
+      <ul class="specs">
+        <li><strong>Chassis:</strong> MA67 Celica Supra platform</li>
+        <li><strong>Use:</strong> Track days (Laguna / Sonoma / etc.) + Car Meets / Shows</li>
+        <li><strong>Current focus:</strong> reliability + handling</li>
+        <li><strong>Next:</strong> Power, Cooling, Aero</li>
+      </ul>
+    </aside>
+  </section>
+  
+
+    <!-- SELECTED WORK -->
+    <section class="panel" style="margin-top:18px;">
+      <h2>Selected Work</h2>
+      <p>Small projects inside the build—each one has a goal, what I did, and what changed.</p>
+
+      <div class="work">
+        <article class="workcard">
+            <h3>Track Alignment Setup</h3>
+            <p>
+              Set a baseline alignment, then iterated camber/toe for stability + turn-in. Documented tire temps/wear and
+              driver impressions to converge on a repeatable setup.
+            </p>
+            <div class="worklinks">
+              <button class="linklike" type="button" data-open="alignmentNotes">Notes</button>
+              <!-- <a href="#" title="Optional link">Before/After</a> -->
+            </div>
+          </article>
+          
+
+        <article class="workcard">
+          <h3>Chassis Bracing / Strut Brace</h3>
+          <p>
+            Designed a brace in CAD, planned mounting points, and evaluated stiffness/packaging. Improved steering feel and
+            consistency under load.
+          </p>
+            <div class="worklinks">
+                <button class="linklike" type="button" data-open="braceCad">CAD</button>
+                <!-- <button class="linklike" type="button" data-open="bracePhotos">Photos</button> -->
+          </div>
+        </article>
+
+        <article class="workcard">
+          <h3>Suspension Refresh</h3>
+          <p>
+            Replaced worn components and re-torqued under load. Confirmed bump steer and checked clearances at full lock/compression.
+          </p>
+          <div class="worklinks">
+            <button class="linklike" type="button" data-open="suspensionModal">Checklist</button>
+
+          </div>
+        </article>
+
+        <article class="workcard">
+          <h3>Engine Swap: 5M-GE -> 7M-GE</h3>
+          <p>
+            Swapped the original 5M-GE for a later-generation 7M-GE sourced from a 1989 Toyota Cressida. The update provides a modest but meaningful increase in horsepower and torque while improving long-term reliability and serviceability. The 7M platform offers stronger aftermarket support, better parts availability, and improved compatibility with modern maintenance and tuning, making it a more sustainable foundation for regular track use.
+          </p>
+            <div class="worklinks">
+                <button class="linklike" type="button" data-open="engineSwapPhotos">Photos</button>
+                <button class="linklike" type="button" data-open="engineSwapModal">Write Up</button>
+
+              </div>
+        </article>
+      </div>
+    </section>
+    <section class="panel" style="margin-top:18px;" aria-label="Full gallery">
+        <h2>Full Photo Gallery</h2>
+        <p class="meta">Hundreds of build + track photos. Click to load.</p>
+      
+        <button class="btn" id="loadGalleryBtn" type="button">
+          Load full gallery
+        </button>
+      
+        <div id="fullGallery" class="gallery-grid" hidden aria-live="polite"></div>
+      </section>
+      
+    <footer>
+      <small>© <span id="year"></span> Luke H • Berkeley Blue & Gold theme</small>
+    </footer>
+    <!-- Suspension Checklist Modal -->
+<div class="modal" id="suspensionModal" aria-hidden="true" role="dialog" aria-label="Suspension Refresh Checklist">
+    <div class="modal-card" role="document">
+      <div class="modal-head">
+        <h3>Suspension Refresh — Checklist</h3>
+        <button class="modal-close" type="button" data-close>✕</button>
+      </div>
+  
+      <p class="meta" style="margin-top:0;">
+        What’s been touched so far for handling + consistency.
+      </p>
+  
+      <ul class="checklist">
+        <li><strong>Coilovers:</strong> installed + baseline ride height -> lowered decreasing body roll, increased handling, corner balance, damping.</li>
+        <li><strong>Camber plates:</strong> installed to reach alignment targets (CAMBER/toe/caster) increased camber for track performance. </li>
+        <li><strong>Adjustable sway bar:</strong> installed + settings tested (soft/medium/stiff) with notes.</li>
+        <li><strong>Strut brace:</strong> fabricated, fitted, clearances checked, torqued.</li>
+        <li><strong>Bushings:</strong> replaced worn bushings (control arms / steering / rear diff mounts as applicable).</li>
+        <li><strong>Hardware:</strong> re-torqued under load (ride-height torque), paint-marked critical fasteners.</li>
+        <li><strong>Clearance checks:</strong> full lock + full compression clearance verified (tires, fenders, brake lines).</li>
+        <li><strong>Bump steer:</strong> checked + steering response notes logged.</li>
+        <li><strong>Track validation:</strong> tire wear/temps + driver feedback used for iteration.</li>
+      </ul>
+  
+      <p class="callout" style="margin-bottom:0;">
+        <strong>Next test:</strong> adjust sway bar + front damping, re-check temps, update alignment if needed.
+      </p>
+    </div>
+  </div>
+  
+  <!-- Engine Swap Write-Up Modal -->
+<div class="modal" id="engineSwapModal" aria-hidden="true" role="dialog" aria-label="Engine Swap Write Up">
+    <div class="modal-card" role="document">
+      <div class="modal-head">
+        <h3>Engine Swap: 5M-GE → 7M-GE (1989 Cressida)</h3>
+        <button class="modal-close" type="button" data-close>✕</button>
+      </div>
+  
+      <p class="meta" style="margin-top:0;">
+        Goal: get a noticeable bump in usable power without turning the car into a fragile science project.
+      </p>
+  
+      <p>
+        The original 5M-GE did its job, but it felt outgunned on straights and uphill pulls—especially when trying to hang
+        with newer MX-5s, BMWs, and Porsches. The fix wasn’t “big power,” it was a smarter baseline: a later-generation
+        <strong>7M-GE</strong> from a <strong>1989 Toyota Cressida</strong> for more torque, better parts availability,
+        and easier long-term maintenance.
+      </p>
+  
+      <div class="panel" style="padding:14px; margin:14px 0;">
+        <h4 style="margin:0 0 10px;">Power change</h4>
+        <ul class="checklist" style="margin:0;">
+          <li><strong>Before (5M-GE):</strong> 145 hp • 150 lb-ft</li>
+          <li><strong>After (7M-GE):</strong> 190 hp • 200 lb-ft</li>
+          <li><strong>Net gain:</strong> + 45 hp • + 50 lb-ft (biggest difference is midrange torque)</li>
+        </ul>
+  
+        <p class="meta" style="margin:10px 0 0;">
+          
+        </p>
+      </div>
+  
+      <div class="panel" style="padding:14px; margin:14px 0;">
+        <h4 style="margin:0 0 10px;">Performance outcome</h4>
+        <ul class="checklist" style="margin:0;">
+          <li><strong>0–60 estimate:</strong> improved by ~ 4 seconds (traction/gearing/tire dependent)</li>
+          <li><strong>Track feel:</strong> stronger pull out of corners + less “waiting” for speed on short straights</li>
+          <li><strong>Usability:</strong> less stress at sustained pace because the engine isn’t always working as hard</li>
+        </ul>
+      </div>
+  
+      <div class="panel" style="padding:14px; margin:14px 0;">
+        <h4 style="margin:0 0 10px;">Reliability + serviceability wins</h4>
+        <ul class="checklist" style="margin:0;">
+          <li><strong>Parts availability:</strong> broader support + easier sourcing for maintenance items</li>
+          <li><strong>Better platform to build on:</strong> more room to grow (cooling, tuning, future upgrades)</li>
+          <li><strong>Track-minded baseline:</strong> modernizable maintenance, less sketchy one-off fixes</li>
+        </ul>
+  
+        <p class="meta" style="margin:10px 0 0;">
+          Note: like any older Toyota inline-6, the swap still lives or dies by cooling, clean wiring, and staying on top of
+          gaskets/hoses/fluids.
+        </p>
+      </div>
+  
+      <p class="callout" style="margin-bottom:0;">
+        <strong>Bottom line:</strong> The 7M-GE isn’t about chasing a huge number—it’s about a stronger, more sustainable
+        engine that makes the car quicker everywhere and easier to keep alive with real track use.
+      </p>
+    </div>
+  </div>
+  
+  <!-- Engine Swap Photos Modal -->
+<div class="modal" id="engineSwapPhotos" aria-hidden="true" role="dialog" aria-label="Engine Swap Photos">
+    <div class="modal-card" role="document">
+      <div class="modal-head">
+        <h3>Engine Swap: 5M-GE → 7M-GE</h3>
+        <button class="modal-close" type="button" data-close>✕</button>
+      </div>
+  
+      <p class="meta" style="margin-top:0;">
+        Key moments from the 5M-GE removal and 7M-GE installation.
+      </p>
+  
+      <div class="gallery-grid">
+        <figure class="gallery-item">
+          <img src="images/Supra/IMG_3217%20(1).jpeg" alt="7M-GE engine out of 1989 Toyota Cressida">
+          <figcaption class="gallery-caption">7M-GE sourced from 1989 Cressida</figcaption>
+        </figure>
+  
+        <figure class="gallery-item">
+          <img src="images/Supra/IMG_9529.jpeg" alt="7M-GE wiring adaptation">
+          <figcaption class="gallery-caption">ECU & engine harness adaptation</figcaption>
+        </figure>
+  
+        <figure class="gallery-item">
+          <img src="images/Supra/IMG_9530.jpeg" alt="7M-GE wiring diagram">
+          <figcaption class="gallery-caption">Wiring reference during swap</figcaption>
+        </figure>
+  
+        <figure class="gallery-item">
+          <img src="images/Supra/IMG_4507.JPG" alt="Engine bay during installation">
+          <figcaption class="gallery-caption">Engine bay during install</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Track Alignment Notes Modal -->
+<div class="modal" id="alignmentNotes" aria-hidden="true" role="dialog" aria-label="Track Alignment Notes">
+    <div class="modal-card" role="document">
+      <div class="modal-head">
+        <h3>Track Alignment — Setup Notes</h3>
+        <button class="modal-close" type="button" data-close>✕</button>
+      </div>
+  
+      <p class="meta" style="margin-top:0;">
+        Alignment changes focused on consistency, tire life, and confidence at the limit.
+      </p>
+  
+      <div class="panel" style="padding:14px; margin:14px 0;">
+        <h4 style="margin:0 0 10px;">Key alignment principles (track-focused)</h4>
+        <ul class="checklist" style="margin:0;">
+          <li><strong>Negative camber:</strong> increases tire contact patch under cornering load → better mid-corner grip.</li>
+          <li><strong>Toe-out (front):</strong> improves turn-in response and steering feel.</li>
+          <li><strong>Toe-in (rear):</strong> increases stability under braking and high-speed corner exit.</li>
+          <li><strong>Caster:</strong> improves straight-line stability and steering self-centering.</li>
+        </ul>
+      </div>
+  
+      <div class="panel" style="padding:14px; margin:14px 0;">
+        <h4 style="margin:0 0 10px;">Baseline setup (example track numbers)</h4>
+        <ul class="checklist" style="margin:0;">
+          <li><strong>Front camber:</strong> −2.5° to −3.0°</li>
+          <li><strong>Rear camber:</strong> −1.5° to −2.0°</li>
+          <li><strong>Front toe:</strong> 0 to slight toe-out (~0.05°)</li>
+          <li><strong>Rear toe:</strong> slight toe-in (~0.10°)</li>
+          <li><strong>Caster:</strong> max achievable within suspension geometry</li>
+        </ul>
+  
+        <p class="meta" style="margin:10px 0 0;">
+          Exact values tuned based on tire temps, track layout, and driver feel.
+        </p>
+      </div>
+  
+      <div class="panel" style="padding:14px; margin:14px 0;">
+        <h4 style="margin:0 0 10px;">Validation process</h4>
+        <ul class="checklist" style="margin:0;">
+          <li><strong>Tire temperatures:</strong> inside/middle/outside readings after sessions</li>
+          <li><strong>Wear pattern:</strong> even shoulder wear vs edge rollover</li>
+          <li><strong>Driver feedback:</strong> turn-in confidence, mid-corner balance, exit stability</li>
+          <li><strong>Iteration:</strong> one change at a time, logged between sessions</li>
+        </ul>
+      </div>
+  
+      <p class="callout" style="margin-bottom:0;">
+        <strong>Result:</strong> predictable front-end grip, reduced understeer, and a setup that holds up across multiple sessions.
+      </p>
+    </div>
+  </div>
+  
+  </main>
+
+  <script>
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ===== Carousel logic =====
+    const track = document.getElementById('track');
+    const slides = Array.from(track.children);
+    const dotsWrap = document.getElementById('dots');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const viewport = document.getElementById('viewport');
+
+    let idx = 0;
+    let auto = true;
+    let timer = null;
+
+    // Build dots
+    slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.className = 'dot' + (i === 0 ? ' active' : '');
+      b.setAttribute('aria-label', `Go to photo ${i+1}`);
+      b.addEventListener('click', () => goTo(i, true));
+      dotsWrap.appendChild(b);
+    });
+    const dots = Array.from(dotsWrap.children);
+
+    function update() {
+      track.style.transform = `translateX(${-idx * 100}%)`;
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    }
+
+    function goTo(i, userAction=false) {
+      idx = (i + slides.length) % slides.length;
+      update();
+      if (userAction) pauseAutoTemporarily();
+    }
+    function next(userAction=false){ goTo(idx + 1, userAction); }
+    function prev(userAction=false){ goTo(idx - 1, userAction); }
+
+    prevBtn.addEventListener('click', () => prev(true));
+    nextBtn.addEventListener('click', () => next(true));
+
+    // Keyboard arrows
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') prev(true);
+      if (e.key === 'ArrowRight') next(true);
+    });
+
+    // Auto-play
+    function startAuto(){
+      stopAuto();
+      timer = setInterval(() => { if (auto) next(false); }, 3500);
+    }
+    function stopAuto(){ if (timer) clearInterval(timer); timer = null; }
+    function pauseAutoTemporarily(){
+      auto = false;
+      stopAuto();
+      setTimeout(() => { auto = true; startAuto(); }, 9000);
+    }
+    startAuto();
+
+    // Swipe support (touch)
+    let startX = null;
+    viewport.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+    }, {passive:true});
+    viewport.addEventListener('touchend', (e) => {
+      if (startX == null) return;
+      const endX = e.changedTouches[0].clientX;
+      const dx = endX - startX;
+      if (Math.abs(dx) > 40) {
+        dx > 0 ? prev(true) : next(true);
+      }
+      startX = null;
+    }, {passive:true});
+    // ===== Full gallery (lazy load on demand) =====
+
+//bottom gallery
+
+const loadBtn = document.getElementById('loadGalleryBtn');
+const fullGallery = document.getElementById('fullGallery');
+let galleryLoaded = false;
+
+function renderGallery(items){
+  items.forEach(({src, cap}) => {
+    const item = document.createElement('figure');
+    item.className = 'gallery-item';
+
+    const isVideo = /\.(mov|mp4)$/i.test(src);
+
+    let media;
+    if (isVideo){
+      media = document.createElement('video');
+      media.src = src;
+      media.controls = true;
+      media.playsInline = true;
+      media.preload = "metadata";
+    } else {
+      media = document.createElement('img');
+      media.src = src;
+      media.loading = "lazy";
+      media.alt = cap || "Celica Supra media";
+    }
+
+    item.appendChild(media);
+
+    if (cap){
+      const fc = document.createElement('figcaption');
+      fc.className = 'gallery-caption';
+      fc.textContent = cap;
+      item.appendChild(fc);
+    }
+
+    fullGallery.appendChild(item);
+  });
+}
+
+loadBtn.addEventListener('click', async () => {
+  // toggle visibility
+  if (!fullGallery.hidden){
+    fullGallery.hidden = true;
+    loadBtn.textContent = "Load full gallery";
+    return;
+  }
+
+  // first-time load
+  if (!galleryLoaded){
+    const res = await fetch("gallery.json");
+    const items = await res.json();
+    renderGallery(items);
+    galleryLoaded = true;
+  }
+
+  fullGallery.hidden = false;
+  loadBtn.textContent = "Hide full gallery";
+});
+
+
+// ===== Lightbox logic (GLOBAL, runs once) =====
+const lightbox = document.getElementById('lightbox');
+const lightboxContent = document.getElementById('lightboxContent');
+const lightboxClose = document.getElementById('lightboxClose');
+
+// Delegate clicks (works for full gallery + modals)
+document.addEventListener('click', (e) => {
+  const img = e.target.closest('.gallery-item img');
+  const video = e.target.closest('.gallery-item video');
+
+  if (!img && !video) return;
+
+  lightboxContent.innerHTML = "";
+
+  if (img){
+    const bigImg = document.createElement('img');
+    bigImg.src = img.src;
+    bigImg.alt = img.alt || "";
+    lightboxContent.appendChild(bigImg);
+  }
+
+  if (video){
+    const bigVid = document.createElement('video');
+    bigVid.src = video.currentSrc || video.src;
+    bigVid.controls = true;
+    bigVid.autoplay = true;
+    bigVid.playsInline = true;
+    bigVid.preload = "metadata";
+    lightboxContent.appendChild(bigVid);
+  }
+
+  lightbox.classList.add('active');
+  lightbox.setAttribute('aria-hidden', 'false');
+});
+
+// Close actions
+function closeLightbox(){
+  lightbox.classList.remove('active');
+  lightbox.setAttribute('aria-hidden', 'true');
+  lightboxContent.innerHTML = "";
+}
+
+lightboxClose.addEventListener('click', closeLightbox);
+
+lightbox.addEventListener('click', (e) => {
+  if (e.target === lightbox) closeLightbox();
+});
+
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeLightbox();
+});
+
+// ===== Modal (checklist) =====
+const openModal = (id) => {
+  const m = document.getElementById(id);
+  if (!m) return;
+  m.setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+};
+
+const closeModal = (m) => {
+  if (!m) return;
+  m.setAttribute("aria-hidden", "true");
+  document.body.style.overflow = "";
+};
+
+document.addEventListener("click", (e) => {
+  const openBtn = e.target.closest("[data-open]");
+  if (openBtn){
+    openModal(openBtn.getAttribute("data-open"));
+    return;
+  }
+
+  const modal = e.target.closest(".modal");
+  if (!modal) return;
+
+  // Click outside card closes
+  if (e.target === modal) closeModal(modal);
+
+  // Close button closes
+  if (e.target.closest("[data-close]")) closeModal(modal);
+});
+
+window.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return;
+  const m = document.querySelector(".modal[aria-hidden='false']");
+  if (m) closeModal(m);
+});
+
+
+  </script>
+</body>
+</html>

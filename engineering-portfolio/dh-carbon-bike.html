@@ -1,0 +1,438 @@
+dh-carbon-bike
+
+<!doctype html>
+<html lang="en" data-theme="auto">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Carbon Fiber DH MTB — Seattube Lug (Bike Builders of Berkeley)</title>
+  <meta name="description" content="Carbon fiber downhill mountain bike build with Bike Builders of Berkeley. Focus: seattube lug design, Fusion 360 FEA, and metal 3D printing." />
+  <link rel="icon" href="/favicon.ico" />
+
+  <style>
+    :root{
+      --cal-blue:#003262;
+      --cal-gold:#FDB515;
+
+      --bg:#071019;
+      --bg-soft:#0c1520;
+      --surface:#0f1a29;
+
+      --text:#eaf2ff;
+      --text-dim:#b8c6dd;
+      --ring: color-mix(in lab, var(--cal-gold) 65%, white);
+
+      --maxw: 1050px;
+      --radius: 18px;
+      --shadow: 0 18px 40px rgba(0,0,0,.35);
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f7f8fb;
+        --bg-soft:#eef2f8;
+        --surface:#ffffff;
+        --text:#0b1220;
+        --text-dim:#4b5563;
+        --shadow: 0 12px 28px rgba(2,6,23,.08);
+      }
+    }
+    
+    #contact {
+  margin-top: 16px; /* or 24px if you want more breathing room */
+}
+
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 500px at 10% -10%, color-mix(in lab, var(--cal-blue) 24%, transparent), transparent 55%),
+        radial-gradient(900px 400px at 90% -10%, color-mix(in lab, var(--cal-gold) 22%, transparent), transparent 55%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
+      line-height:1.6;
+    }
+    a{color:inherit;text-decoration:none}
+    .container{max-width:var(--maxw);margin:0 auto;padding:24px}
+
+    header{
+      position: sticky; top:0; z-index:20;
+      backdrop-filter: blur(10px);
+      background: color-mix(in lab, var(--bg) 70%, transparent);
+      border-bottom: 1px solid color-mix(in lab, var(--text) 12%, transparent);
+    }
+    .nav{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:12px 24px;max-width:var(--maxw);margin:0 auto
+    }
+    .back{font-weight:800;color:var(--cal-gold)}
+    .back:hover{color:var(--cal-blue);text-decoration:underline}
+    .pill{
+      font-size:12px; letter-spacing:.12em; text-transform:uppercase;
+      color: var(--cal-gold);
+      background: color-mix(in lab, var(--cal-gold) 12%, transparent);
+      border:1px solid color-mix(in lab, var(--cal-gold) 40%, transparent);
+      padding: 6px 10px; border-radius: 999px;
+    }
+
+    .hero{
+      padding: 28px 0 10px;
+      display:grid;
+      gap:16px;
+    }
+    .title{margin:0; font-size: clamp(30px, 3vw + 14px, 48px); line-height:1.1}
+    .meta{margin:0;color:var(--text-dim)}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+    .chip{
+      font-size:13px; padding:6px 10px; border-radius:999px;
+      background: color-mix(in lab, var(--cal-blue) 14%, transparent);
+      border:1px solid color-mix(in lab, var(--cal-blue) 45%, transparent);
+    }
+    .chip.gold{
+      background: color-mix(in lab, var(--cal-gold) 22%, transparent);
+      border-color: color-mix(in lab, var(--cal-gold) 55%, transparent);
+      color:#1a1400;
+    }
+
+    .panel{
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      outline: 1px solid color-mix(in lab, var(--text) 12%, transparent);
+    }
+    .grid{
+      display:grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+      margin-top: 16px;
+    }
+
+    .contact-list { list-style: none; padding: 0; margin: 0; }
+    .contact-list li { margin: 6px 0; }
+    .contact-list a { color: var(--cal-gold); font-weight: 650; }
+    .contact-list a:hover { color: var(--cal-blue); text-decoration: underline; }
+
+    @media (min-width: 900px){
+      .grid{grid-template-columns: 1.2fr .8fr}
+    }
+    .panel h2{margin:0 0 10px}
+    .panel p{margin:0 0 12px; color:var(--text-dim); line-height:1.75}
+    .panel p:last-child{margin-bottom:0}
+
+    .specs{margin:0; padding-left:18px}
+    .specs li{margin:10px 0; color:var(--text-dim)}
+    .specs strong{color:var(--text)}
+
+    .callout{
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: color-mix(in lab, var(--cal-gold) 12%, transparent);
+      border: 1px solid color-mix(in lab, var(--cal-gold) 40%, transparent);
+      color: var(--text);
+    }
+
+    /* ===== Photo grid as boxes ===== */
+    .gallery-grid{
+      margin-top: 14px;
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    @media (min-width: 700px){
+      .gallery-grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+    @media (min-width: 1100px){
+      .gallery-grid{ grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+
+    .gallery-item{
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #000;
+      outline: 1px solid color-mix(in lab, var(--text) 12%, transparent);
+      box-shadow: var(--shadow);
+
+      aspect-ratio: 4 / 3; /* change to 1/1 for square, 16/9 for wide */
+      cursor: zoom-in;
+    }
+
+    .gallery-item img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      transform: scale(1.01);
+    }
+    .gallery-item:hover img{
+      transform: scale(1.05);
+      transition: transform 200ms ease;
+    }
+    .gallery-caption{
+      position: absolute;
+      left: 10px; right: 10px; bottom: 10px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      background: color-mix(in lab, var(--bg) 55%, transparent);
+      border: 1px solid color-mix(in lab, var(--text) 14%, transparent);
+      backdrop-filter: blur(8px);
+      color: var(--text);
+    }
+
+    /* ===== Lightbox ===== */
+    #lightbox{
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 8, 18, 0.92);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 18px;
+    }
+    #lightbox.active{ display:flex; }
+
+    #lightboxContent{
+      width: min(92vw, 1200px);
+      height: 92vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    #lightboxContent img{
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      border-radius: 14px;
+      box-shadow: 0 30px 80px rgba(0,0,0,.6);
+      background: #000;
+    }
+    #lightboxClose{
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: 1px solid color-mix(in lab, white 20%, transparent);
+      color: white;
+      border-radius: 12px;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-weight: 900;
+      font-size: 16px;
+    }
+    #lightboxClose:hover{ transform: translateY(-1px); }
+
+    footer{
+      margin-top: 28px;
+      padding: 24px;
+      text-align:center;
+      color: var(--text-dim);
+      border-top: 3px solid color-mix(in lab, var(--cal-gold) 35%, transparent);
+    }
+    :focus-visible{outline:3px solid var(--ring); outline-offset:3px; border-radius:10px}
+    @media (prefers-reduced-motion: reduce){
+      *{transition:none!important; animation:none!important}
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav class="nav">
+      <a class="back" href="index.html">← Home</a>
+      <span class="pill">Bike Builders of Berkeley</span>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- HERO -->
+    <section class="hero" aria-labelledby="title">
+      <h1 class="title" id="title">Carbon Fiber Downhill MTB — Seattube Lug Design</h1>
+      <p class="meta">
+        Built with <strong>Bike Builders of Berkeley</strong>. Focus: a structurally-critical Seattube lug designed in CAD,
+        validated with <strong>FEA in Fusion 360</strong>, and produced via <strong>metal 3D printing</strong>.
+      </p>
+
+      <div>
+        <strong>Skills used:</strong>
+        <div class="chips" aria-label="Skills used">
+          <span class="chip gold">Fusion 360 CAD + FEA</span>
+          <span class="chip">Carbon layup + bonding interfaces</span>
+          <span class="chip gold">Design for metal AM</span>
+          <span class="chip">Load paths + safety factors</span>
+          <span class="chip">Iterate → build → test</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- OVERVIEW + SNAPSHOT -->
+    <section class="grid" aria-label="Overview and build snapshot">
+      <article class="panel">
+        <h2>Overview</h2>
+        <p>
+          This project was about building a downhill-capable carbon frame with a focus on the
+          <strong>Seattube lug</strong>—the part that sees major combined loads from braking, impacts, and steering inputs.
+          We designed the lug geometry to create clean load paths into the frame tubes, maintain bearing alignment, and
+          provide robust bonding surfaces for carbon interfaces.
+        </p>
+        <p>
+          I worked on the seattube lug from concept to manufacturing: Doing CAD design, hand calculations, FEA setup, result interpretation,
+          and iterative geometry updates. Once we completed the design, the lug model was sent for <strong>metal 3D printing</strong>
+          later getting bonded into the frame build.
+        </p>
+
+        <div class="callout">
+          <strong>Engineering focus:</strong> load cases (braking + impacts), stiffness vs. weight tradeoffs, printability, and
+          maximum bond-area for carbon assembly.
+        </div>
+      </article>
+
+      <aside class="panel">
+        <h2>Build Snapshot</h2>
+        <ul class="specs">
+          <li><strong>Project:</strong> Carbon Fiber DH MTB (Club Build)</li>
+          <li><strong>Component:</strong> Custom seattube lug</li>
+          <li><strong>Tools:</strong> Fusion 360 (CAD + FEA)</li>
+          <li><strong>Validation:</strong> stress hotspots + deflection + iteration</li>
+          <li><strong>Outcome:</strong> printable lug with strong interfaces + clean assembly</li>
+        </ul>
+      </aside>
+    </section>
+
+    <!-- FEA SECTION -->
+    <section class="panel" style="margin-top:16px;" aria-label="FEA details">
+      <h2>Seattube Lug FEA (Fusion 360)</h2>
+      <p>
+        We modeled the lug with realistic constraints at the tube interfaces and applied representative load cases
+        for downhill riding (hard braking moments + frontal impacts). The goal was to reduce peak stresses at transitions,
+        control deflection at the seattube bores, and keep geometry friendly for printing and post-processing.
+      </p>
+
+      <ul class="specs">
+        <li><strong>Load cases:</strong> braking torque about the seattube, impact-like force at fork/axle direction, steering-induced moments</li>
+        <li><strong>What we watched:</strong> stress concentrations near tube junctions, seattube bore deflection/misalignment, thin-wall risk areas</li>
+        <li><strong>Design changes:</strong> fillet + gusset tuning, wall thickness where it matters, smoother transitions to spread stress</li>
+        <li><strong>Manufacturing constraints:</strong> avoid un-supportable overhangs, maintain minimum feature thickness, preserve post-machining access</li>
+      </ul>
+
+      <div class="callout">
+        <strong>Notes:</strong>  This project was treated as a real world engineering task, including timely deadlines, CAD freezes, and a push to the finish line for Sea Otter 2025
+      </div>
+    </section>
+
+    <!-- PHOTOS -->
+    <section class="panel" style="margin-top:16px;" aria-label="Photo gallery">
+      <h2>Photos</h2>
+      <p class="meta">Click any photo to expand.</p>
+
+      <div class="gallery-grid" id="photoGrid">
+        <!-- Replace these with your real paths -->
+        <figure class="gallery-item">
+          <img src="images/Bike/SideProfile.jpeg" alt="Seattube lug CAD model in Fusion 360" />
+          <figcaption class="gallery-caption">CAD: seattube lug geometry + interfaces</figcaption>
+        </figure>
+
+        <figure class="gallery-item">
+          <img src="images/Bike/Drawing.jpeg" alt="FEA stress plot in Fusion 360" />
+          <figcaption class="gallery-caption">Engineering Drawing</figcaption>
+        </figure>
+
+        <figure class="gallery-item">
+          <img src="images/Bike/Side Section.png" alt="FEA deflection plot in Fusion 360" />
+          <figcaption class="gallery-caption">Side View</figcaption>
+        </figure>
+
+        <figure class="gallery-item">
+          <img src="images/Bike/3D-print.HEIC" alt="Metal 3D printed seattube lug" />
+          <figcaption class="gallery-caption">Metal AM: printed lug (pre/post processing)</figcaption>
+        </figure>
+
+        <figure class="gallery-item">
+          <img src="images/Bike/Ready.heic" alt="Frame assembly with lug bonded to carbon tubes" />
+          <figcaption class="gallery-caption">Assembly: carbon interface + bonding surfaces</figcaption>
+        </figure>
+
+        <figure class="gallery-item">
+          <img src="images/Bike/Finished.JPEG" alt="Completed downhill mountain bike" />
+          <figcaption class="gallery-caption">Result: completed DH build</figcaption>
+        </figure>
+
+        <figure class="gallery-item">
+            <img src="images/Bike/Cross Section.png" alt="Frame assembly with lug bonded to carbon tubes" />
+            <figcaption class="gallery-caption">Cross Section + carbon interface</figcaption>
+        </figure>
+  
+        <figure class="gallery-item">
+            <img src="images/Bike/Sea Otter.PNG" alt="Completed downhill mountain bike" />
+            <figcaption class="gallery-caption">Sea Otter 2025</figcaption>
+        </figure>
+
+      </div>
+    
+      </section>
+
+    <aside id="contact" class="panel" aria-labelledby="contact-heading">
+      <h3 id="contact-heading">Club Details</h3>
+      <ul class="contact-list">
+        <li>Email: <a href="mailto:contact@bikebuilders.berkeley.edu">contact@bikebuilders.berkeley.edu</a></li>
+        <li>Instagram: <a href="https://www.instagram.com/bike_builders_of_berkeley/" target="_blank" rel="noopener">bike_builders_of_berkeley</a></li>
+        <li>Website: <a href="https://bikebuilders.studentorg.berkeley.edu" target="_blank" rel="noopener">Bike Builders Link</a></li>
+        <li>Linkedin: <a href="https://www.linkedin.com/company/bike-builders-of-berkeley/" target="_blank" rel="noopener">bike-builders-of-berkeley</a></li>
+      </ul>
+    </aside>
+
+  </section>
+
+  <footer>
+    <small>© <span id="year"></span> Luke H • Berkeley Blue & Gold theme</small>
+  </footer>
+
+  </main>
+
+  <!-- LIGHTBOX -->
+  <div id="lightbox" aria-hidden="true">
+    <button id="lightboxClose" aria-label="Close">✕</button>
+    <div id="lightboxContent"></div>
+  </div>
+
+  <script>
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Lightbox
+    const lightbox = document.getElementById('lightbox');
+    const lightboxContent = document.getElementById('lightboxContent');
+    const lightboxClose = document.getElementById('lightboxClose');
+
+    document.addEventListener('click', (e) => {
+      const img = e.target.closest('.gallery-item img');
+      if (!img) return;
+
+      lightboxContent.innerHTML = "";
+      const big = document.createElement('img');
+      big.src = img.src;
+      big.alt = img.alt || "";
+      lightboxContent.appendChild(big);
+
+      lightbox.classList.add('active');
+      lightbox.setAttribute('aria-hidden', 'false');
+    });
+
+    function closeLightbox(){
+      lightbox.classList.remove('active');
+      lightbox.setAttribute('aria-hidden', 'true');
+      lightboxContent.innerHTML = "";
+    }
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+    window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+  </script>
+</body>
+</html>

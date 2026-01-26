@@ -1,0 +1,359 @@
+micro-hydroponic-tower
+
+<!doctype html>
+<html lang="en" data-theme="auto">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Micro Hydroponic Tower — Project</title>
+  <meta name="description" content="Micro desktop hydroponic tower: 3D printed design, app-controlled LEDs, and low-cost materials." />
+  <link rel="icon" href="/favicon.ico" />
+
+  <style>
+    :root{
+      --cal-blue:#003262;
+      --cal-gold:#FDB515;
+
+      --bg:#071019;
+      --bg-soft:#0c1520;
+      --surface:#0f1a29;
+
+      --text:#eaf2ff;
+      --text-dim:#b8c6dd;
+      --ring: color-mix(in lab, var(--cal-gold) 65%, white);
+
+      --maxw: 1050px;
+      --radius: 18px;
+      --shadow: 0 18px 40px rgba(0,0,0,.35);
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f7f8fb;
+        --bg-soft:#eef2f8;
+        --surface:#ffffff;
+        --text:#0b1220;
+        --text-dim:#4b5563;
+        --shadow: 0 12px 28px rgba(2,6,23,.08);
+      }
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 500px at 10% -10%, color-mix(in lab, var(--cal-blue) 24%, transparent), transparent 55%),
+        radial-gradient(900px 400px at 90% -10%, color-mix(in lab, var(--cal-gold) 22%, transparent), transparent 55%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
+      line-height:1.6;
+    }
+    a{color:inherit;text-decoration:none}
+    .container{max-width:var(--maxw);margin:0 auto;padding:24px}
+
+    header{
+      position: sticky; top:0; z-index:20;
+      backdrop-filter: blur(10px);
+      background: color-mix(in lab, var(--bg) 70%, transparent);
+      border-bottom: 1px solid color-mix(in lab, var(--text) 12%, transparent);
+    }
+    .nav{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:12px 24px;max-width:var(--maxw);margin:0 auto
+    }
+    .back{font-weight:800;color:var(--cal-gold)}
+    .back:hover{color:var(--cal-blue);text-decoration:underline}
+    .pill{
+      font-size:12px; letter-spacing:.12em; text-transform:uppercase;
+      color: var(--cal-gold);
+      background: color-mix(in lab, var(--cal-gold) 12%, transparent);
+      border:1px solid color-mix(in lab, var(--cal-gold) 40%, transparent);
+      padding: 6px 10px; border-radius: 999px;
+    }
+
+    .hero{
+      padding: 26px 0 8px;
+      display:grid;
+      gap: 10px;
+    }
+    .title{margin:0; font-size: clamp(28px, 3vw + 12px, 44px); line-height:1.1}
+    .meta{margin:0;color:var(--text-dim)}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+    .chip{
+      font-size:13px; padding:6px 10px; border-radius:999px;
+      background: color-mix(in lab, var(--cal-blue) 14%, transparent);
+      border:1px solid color-mix(in lab, var(--cal-blue) 45%, transparent);
+    }
+    .chip.gold{
+      background: color-mix(in lab, var(--cal-gold) 22%, transparent);
+      border-color: color-mix(in lab, var(--cal-gold) 55%, transparent);
+      color:#1a1400;
+    }
+
+    .panel{
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      outline: 1px solid color-mix(in lab, var(--text) 12%, transparent);
+    }
+    .panel h2{margin:0 0 10px}
+    .panel p{margin:0 0 12px; color:var(--text-dim)}
+    .panel p:last-child{margin-bottom:0}
+
+    .callout{
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: color-mix(in lab, var(--cal-gold) 12%, transparent);
+      border: 1px solid color-mix(in lab, var(--cal-gold) 40%, transparent);
+      color: var(--text);
+    }
+
+    /* Gallery grid */
+    .gallery-grid{
+      margin-top: 14px;
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    @media (min-width: 760px){
+      .gallery-grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    .gallery-item{
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #000;
+      outline: 1px solid color-mix(in lab, var(--text) 12%, transparent);
+      box-shadow: var(--shadow);
+      aspect-ratio: 4 / 3;
+    }
+
+    .gallery-item img,
+    .gallery-item video{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      cursor: zoom-in;
+    }
+
+    .gallery-item:hover img{
+      transform: scale(1.04);
+      transition: transform 200ms ease;
+    }
+    .gallery-caption{
+      position: absolute;
+      left: 10px; right: 10px; bottom: 10px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      background: color-mix(in lab, var(--bg) 55%, transparent);
+      border: 1px solid color-mix(in lab, var(--text) 14%, transparent);
+      backdrop-filter: blur(8px);
+      color: var(--text);
+    }
+
+    /* Lightbox */
+    #lightbox{
+      position: fixed; inset: 0;
+      background: rgba(3, 8, 18, 0.92);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 18px;
+    }
+    #lightbox.active{ display:flex; }
+    #lightboxClose{
+      position: absolute;
+      top: 18px; right: 18px;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 28px;
+      cursor: pointer;
+    }
+    #lightboxContent{
+      width: min(92vw, 1200px);
+      height: 92vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    #lightboxContent img{
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 14px;
+      box-shadow: 0 30px 80px rgba(0,0,0,.6);
+      background: #000;
+    }
+
+    footer{
+      margin-top: 26px;
+      padding: 24px;
+      text-align:center;
+      color: var(--text-dim);
+      border-top: 3px solid color-mix(in lab, var(--cal-gold) 35%, transparent);
+    }
+    :focus-visible{outline:3px solid var(--ring); outline-offset:3px; border-radius:10px}
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav class="nav">
+      <a class="back" href="index.html">← Home</a>
+      <span class="pill">Hydroponic Tower</span>
+    </nav>
+  </header>
+
+  <!-- Lightbox -->
+  <div id="lightbox" aria-hidden="true">
+    <button id="lightboxClose" aria-label="Close">✕</button>
+    <div id="lightboxContent"></div>
+  </div>
+
+  <main class="container">
+    <section class="hero">
+      <h1 class="title">Micro Desktop Hydroponic Tower — App-Controlled Grow System</h1>
+      <p class="meta">
+        A tiny, low-cost hydroponic tower that recirculates water with a fish bubble pump and runs grow lights on a schedule set from my own app.
+      </p>
+
+      <div>
+        <strong>Skills learned:</strong>
+        <div class="chips">
+          <span class="chip gold">3D printing + iteration</span>
+          <span class="chip">Rapid prototyping</span>
+          <span class="chip gold">Embedded control</span>
+          <span class="chip">App ↔ hardware integration</span>
+          <span class="chip">Low-cost design constraints</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" aria-label="Overview">
+      <h2>Overview</h2>
+      <p>
+        I designed and 3D printed a micro hydroponic tower meant to live on a desk and actually be practical:
+        cheap materials, simple assembly, and a clean way to control lighting without over-engineering it.
+      </p>
+      <p>
+        The system uses a small fish bubble pump to lift water from a reservoir (a dollar-store glass jar) up to the top of the tower,
+        where it trickles down through the plant pockets. A set of low-cost LEDs provides light, and I control the on/off schedule
+        from an app I wrote so I can set daily timers and leave it running hands-off.
+      </p>
+
+      <p class="callout">
+        <strong>Result:</strong> a compact, “micro” hydroponics setup that’s inexpensive, customizable, and runs on a set-it-and-forget-it lighting schedule.
+      </p>
+    </section>
+
+    <section class="panel" style="margin-top:16px;" aria-label="Design goals">
+      <h2>Design goals</h2>
+      <p><strong>Constraints:</strong> tiny footprint, low cost, minimal parts, easy to refill/clean, safe around electronics.</p>
+      <p><strong>Key choices:</strong> 3D printed modular tower, jar reservoir, simple pump-driven lift, low-cost LED strip + switches.</p>
+      <p><strong>What made it fun:</strong> balancing “cheap + buildable” with reliability (no leaks, stable flow, predictable light schedule).</p>
+    </section>
+
+    <section class="panel" style="margin-top:16px;" aria-label="Photos">
+      <h2>Photos</h2>
+      <p class="meta">Click any image to expand.</p>
+
+      <div class="gallery-grid">
+        <!-- Replace these with your actual image files -->
+        <figure class="gallery-item">
+          <img src="images/Tower/Full.HEIC" alt="Micro hydroponic tower overview">
+          <figcaption class="gallery-caption">Overall tower + desk footprint</figcaption>
+        </figure>
+
+        <figure class="gallery-item">
+          <img src="images/Hydro/print-detail.jpg" alt="3D printed tower detail">
+          <figcaption class="gallery-caption">3D printed modules / plant pockets</figcaption>
+        </figure>
+
+        <figure class="gallery-item">
+          <img src="images/Hydro/reservoir.jpg" alt="Reservoir jar and pump">
+          <figcaption class="gallery-caption">Dollar-store jar reservoir + pump</figcaption>
+        </figure>
+
+        <figure class="gallery-item">
+          <img src="images/Hydro/leds.jpg" alt="LED lighting on the tower">
+          <figcaption class="gallery-caption">LED placement + light coverage</figcaption>
+        </figure>
+
+        <figure class="gallery-item">
+          <img src="images/Hydro/app.jpg" alt="App interface for scheduling LEDs">
+          <figcaption class="gallery-caption">App UI for setting on/off times</figcaption>
+        </figure>
+
+        <figure class="gallery-item">
+          <img src="images/Hydro/cad.png" alt="CAD for the hydroponic tower">
+          <figcaption class="gallery-caption">CAD / iteration notes</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="panel" style="margin-top:16px;" aria-label="How it works">
+        <h2>How it works</h2>
+        <p>
+          <strong>Water path:</strong> reservoir → bubble pump → lift line to tower top → distribution at the top → gravity return through plant pockets.
+        </p>
+        <p>
+          <strong>Lighting:</strong> low-cost LEDs controlled by a switch/driver, scheduled from my app (set on/off times).
+        </p>
+        <p>
+          <strong>Materials:</strong> cheap + accessible parts (dollar-store jar, low-cost LEDs, basic tubing) paired with a custom 3D printed structure.
+        </p>
+      </section>
+
+    <section class="panel" style="margin-top:16px;" aria-label="Quick details">
+      <h2>Quick details</h2>
+      <p><strong>What I’d improve next:</strong> easier quick-clean features, quieter pump isolation, and a more even top distribution.</p>
+      <p><strong>Stretch goals:</strong> water level sensing, basic EC/temp sensing, closed-loop light scheduling presets, and a  ph monitor.</p>
+    </section>
+
+    <footer>
+      <small>© <span id="year"></span> Luke H • Berkeley Blue & Gold theme</small>
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Lightbox (images)
+    const lightbox = document.getElementById('lightbox');
+    const lightboxContent = document.getElementById('lightboxContent');
+    const lightboxClose = document.getElementById('lightboxClose');
+
+    document.addEventListener('click', (e) => {
+      const img = e.target.closest('.gallery-item img');
+      if (!img) return;
+
+      lightboxContent.innerHTML = "";
+      const big = document.createElement('img');
+      big.src = img.src;
+      big.alt = img.alt || "";
+      lightboxContent.appendChild(big);
+
+      lightbox.classList.add('active');
+      lightbox.setAttribute('aria-hidden', 'false');
+    });
+
+    function closeLightbox(){
+      lightbox.classList.remove('active');
+      lightbox.setAttribute('aria-hidden', 'true');
+      lightboxContent.innerHTML = "";
+    }
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+    window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+  </script>
+</body>
+</html>

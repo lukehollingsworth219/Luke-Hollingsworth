@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en" data-theme="auto">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>F600 Racecar — Coming Soon</title>
+  <meta name="description" content="Coming soon: a self-built Formula 600 racecar—cheap, reliable, and engineered to learn by doing." />
+  <link rel="icon" href="/favicon.ico" />
+
+  <style>
+    :root{
+      --cal-blue:#003262;
+      --cal-gold:#FDB515;
+
+      --bg:#071019;
+      --bg-soft:#0c1520;
+      --surface:#0f1a29;
+
+      --text:#eaf2ff;
+      --text-dim:#b8c6dd;
+      --ring: color-mix(in lab, var(--cal-gold) 65%, white);
+
+      --maxw: 1050px;
+      --radius: 18px;
+      --shadow: 0 18px 40px rgba(0,0,0,.35);
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f7f8fb;
+        --bg-soft:#eef2f8;
+        --surface:#ffffff;
+        --text:#0b1220;
+        --text-dim:#4b5563;
+        --shadow: 0 12px 28px rgba(2,6,23,.08);
+      }
+    }
+    /* COMING SOON CALLOUT */
+.coming-soon{
+  margin: 18px 0 28px;
+  padding: 22px;
+  border-radius: 22px;
+
+  background:
+    repeating-linear-gradient(
+      45deg,
+      color-mix(in lab, var(--cal-gold) 22%, transparent),
+      color-mix(in lab, var(--cal-gold) 22%, transparent) 12px,
+      color-mix(in lab, var(--bg) 85%, transparent) 12px,
+      color-mix(in lab, var(--bg) 85%, transparent) 24px
+    );
+
+  outline: 2px solid color-mix(in lab, var(--cal-gold) 55%, transparent);
+  box-shadow:
+    0 30px 60px rgba(0,0,0,.45),
+    inset 0 0 0 2px color-mix(in lab, var(--cal-gold) 45%, transparent);
+}
+
+/* Back to home button under Coming Soon */
+.back-home-wrap{
+  display: flex;
+  justify-content: center;
+  margin: 10px 0 26px;
+}
+
+.back-home-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+
+  padding: 10px 18px;
+  border-radius: 999px;
+
+  color: var(--cal-gold);
+  background: color-mix(in lab, var(--cal-gold) 10%, transparent);
+  border: 1.5px solid color-mix(in lab, var(--cal-gold) 45%, transparent);
+
+  box-shadow: 0 10px 24px rgba(0,0,0,.25);
+  transition: all 180ms ease;
+}
+
+.back-home-btn:hover{
+  color: var(--cal-blue);
+  background: color-mix(in lab, var(--cal-gold) 18%, transparent);
+  border-color: color-mix(in lab, var(--cal-blue) 55%, transparent);
+  transform: translateY(-1px);
+}
+
+.back-home-btn:active{
+  transform: translateY(0);
+}
+
+
+.coming-soon-inner{
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 22px;
+  text-align: center;
+}
+
+.coming-soon h2{
+  margin: 0 0 10px;
+  font-size: clamp(22px, 2.5vw + 10px, 34px);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--cal-gold);
+}
+
+.coming-soon p{
+  margin: 0 0 10px;
+  font-size: 16px;
+  color: var(--text);
+}
+
+.coming-soon p.sub{
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-dim);
+}
+
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 500px at 10% -10%, color-mix(in lab, var(--cal-blue) 24%, transparent), transparent 55%),
+        radial-gradient(900px 400px at 90% -10%, color-mix(in lab, var(--cal-gold) 22%, transparent), transparent 55%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
+      line-height:1.6;
+    }
+    a{color:inherit;text-decoration:none}
+    .container{max-width:var(--maxw);margin:0 auto;padding:24px}
+
+    header{
+      position: sticky; top:0; z-index:20;
+      backdrop-filter: blur(10px);
+      background: color-mix(in lab, var(--bg) 70%, transparent);
+      border-bottom: 1px solid color-mix(in lab, var(--text) 12%, transparent);
+    }
+    .nav{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:12px 24px;max-width:var(--maxw);margin:0 auto
+    }
+    .back{font-weight:800;color:var(--cal-gold)}
+    .back:hover{color:var(--cal-blue);text-decoration:underline}
+    .pill{
+      font-size:12px; letter-spacing:.12em; text-transform:uppercase;
+      color: var(--cal-gold);
+      background: color-mix(in lab, var(--cal-gold) 12%, transparent);
+      border:1px solid color-mix(in lab, var(--cal-gold) 40%, transparent);
+      padding: 6px 10px; border-radius: 999px;
+    }
+
+    .hero{
+      padding: 26px 0 8px;
+      display:grid;
+      gap: 12px;
+    }
+    .title{margin:0; font-size: clamp(28px, 3vw + 12px, 46px); line-height:1.08}
+    .meta{margin:0;color:var(--text-dim)}
+
+    .badge-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:4px}
+    .tag{
+      font-size:12px; letter-spacing:.12em; text-transform:uppercase;
+      padding: 6px 10px; border-radius: 999px;
+      background: color-mix(in lab, var(--cal-blue) 14%, transparent);
+      border:1px solid color-mix(in lab, var(--cal-blue) 45%, transparent);
+    }
+    .tag.gold{
+      background: color-mix(in lab, var(--cal-gold) 18%, transparent);
+      border-color: color-mix(in lab, var(--cal-gold) 50%, transparent);
+      color: var(--text);
+    }
+
+    .panel{
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      outline: 1px solid color-mix(in lab, var(--text) 12%, transparent);
+    }
+    .panel h2{margin:0 0 10px}
+    .panel p{margin:0 0 12px; color:var(--text-dim)}
+    .panel p:last-child{margin-bottom:0}
+
+    .callout{
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: color-mix(in lab, var(--cal-gold) 12%, transparent);
+      border: 1px solid color-mix(in lab, var(--cal-gold) 40%, transparent);
+      color: var(--text);
+    }
+
+    .grid-2{
+      display:grid;
+      gap:12px;
+      grid-template-columns: 1fr;
+      margin-top: 12px;
+    }
+    @media (min-width: 860px){
+      .grid-2{ grid-template-columns: 1.2fr .8fr; }
+    }
+
+    .list{
+      margin: 0;
+      padding-left: 18px;
+      color: var(--text-dim);
+    }
+    .list li{ margin: 8px 0; }
+
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+    .chip{
+      font-size:13px; padding:6px 10px; border-radius:999px;
+      background: color-mix(in lab, var(--cal-blue) 14%, transparent);
+      border:1px solid color-mix(in lab, var(--cal-blue) 45%, transparent);
+    }
+    .chip.gold{
+      background: color-mix(in lab, var(--cal-gold) 22%, transparent);
+      border-color: color-mix(in lab, var(--cal-gold) 55%, transparent);
+      color:#1a1400;
+    }
+
+    /* Gallery grid */
+    .gallery-grid{
+      margin-top: 14px;
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    @media (min-width: 760px){
+      .gallery-grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+    .gallery-item{
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #000;
+      outline: 1px solid color-mix(in lab, var(--text) 12%, transparent);
+      box-shadow: var(--shadow);
+      aspect-ratio: 4 / 3;
+    }
+    .gallery-item img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+    .gallery-caption{
+      position: absolute;
+      left: 10px; right: 10px; bottom: 10px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      background: color-mix(in lab, var(--bg) 55%, transparent);
+      border: 1px solid color-mix(in lab, var(--text) 14%, transparent);
+      backdrop-filter: blur(8px);
+      color: var(--text);
+    }
+
+    /* Snippet blocks */
+    pre{
+      margin: 12px 0 0;
+      padding: 14px 14px;
+      border-radius: 14px;
+      overflow: auto;
+      background: color-mix(in lab, var(--bg) 65%, black);
+      border: 1px solid color-mix(in lab, var(--text) 14%, transparent);
+      color: var(--text);
+      box-shadow: 0 14px 30px rgba(0,0,0,.25);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    code{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace}
+
+    footer{
+      margin-top: 26px;
+      padding: 24px;
+      text-align:center;
+      color: var(--text-dim);
+      border-top: 3px solid color-mix(in lab, var(--cal-gold) 35%, transparent);
+    }
+    :focus-visible{outline:3px solid var(--ring); outline-offset:3px; border-radius:10px}
+  </style>
+</head>
+
+<section class="coming-soon" aria-label="Coming soon notice">
+    <div class="coming-soon-inner">
+      <h2>🚧 COMING SOON 🚧</h2>
+      <p>
+        Everything below is a <strong>mockup and planning document</strong>.
+        This project is actively being designed and will be built, tested,
+        and documented soon.
+      </p>
+      <p class="sub">
+        Expect real CAD, fabrication photos, data, calculations, and track testing
+        as the build progresses.
+      </p>
+    </div>
+  </section>
+
+
+  <div class="back-home-wrap">
+    <a href="index.html" class="back-home-btn" aria-label="Go back to home">
+      ← Back to Home
+    </a>
+  </div>
+  
+  
+  <main class="container">
+    <section class="hero">
+      <h1 class="title">F600 Racecar — Coming Soon</h1>
+      <p class="meta">
+        A self-built, low-cost but reliable Formula 600-style racecar to push my engineering skills into the real world —
+        moving from an F600 sim racing series to actual wheel-to-wheel racing.
+      </p>
+
+      <div class="badge-row" aria-label="Project metadata">
+        <span class="tag gold">Role: design + build</span>
+        <span class="tag">Tech: Fusion 360</span>
+        <span class="tag">ESP32</span>
+        <span class="tag">LTspice</span>
+        <span class="tag">Python</span>
+      </div>
+
+      <div>
+        <strong>Focus areas:</strong>
+        <div class="chips">
+          <span class="chip gold">Chassis stiffness</span>
+          <span class="chip">Powertrain packaging</span>
+          <span class="chip gold">Embedded telemetry</span>
+          <span class="chip">Test → iterate → validate</span>
+          <span class="chip">Track driving development</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" aria-label="Short summary">
+      <h2>Short summary</h2>
+      <p>
+        This project is about building a “cheap but not sketchy” racecar: simple, serviceable, and designed around reliability.
+        I’m using it as a structured engineering exercise—requirements first, then design, analysis, fabrication, testing, and iteration.
+      </p>
+
+      <div class="grid-2" role="group" aria-label="Goals and constraints">
+        <div class="panel" style="box-shadow:none; outline: 1px solid color-mix(in lab, var(--text) 10%, transparent);">
+          <h2 style="margin:0 0 8px; font-size:18px;">Goals</h2>
+          <ul class="list">
+            <li>Build a real racecar that’s reliable enough to drive hard, often.</li>
+            <li>Translate sim learnings into real-world vehicle dynamics + racecraft.</li>
+            <li>Design and validate subsystems (chassis, power, electronics) with real data.</li>
+            <li>Make it easy to service between sessions: modular, accessible, documented.</li>
+          </ul>
+        </div>
+
+        <div class="panel" style="box-shadow:none; outline: 1px solid color-mix(in lab, var(--text) 10%, transparent);">
+          <h2 style="margin:0 0 8px; font-size:18px;">Constraints</h2>
+          <ul class="list">
+            <li>Low-cost parts and fabrication methods.</li>
+            <li>Safety and reliability over peak performance.</li>
+            <li>Lightweight packaging with clean load paths.</li>
+            <li>Design choices driven by testability and iteration speed.</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="callout">
+        <strong>What makes it interesting:</strong> it’s a full-stack engineering build—CAD, structures, powertrain layout,
+        embedded electronics, and data-driven testing—plus the feedback loop of actual track driving.
+      </p>
+    </section>
+
+    <section class="panel" style="margin-top:16px;" aria-label="Highlights">
+      <h2>Highlights</h2>
+
+      <p><strong>Chassis:</strong> tube-frame with triangulation for torsional stiffness, designed around accessible weld joints and serviceability.</p>
+      <p><strong>Power:</strong> motorcycle engine package, chain drive, and differential setup with focus on reliability and cooling.</p>
+      <p><strong>Electronics:</strong> ESP32 dash, strain gauges, and data logging to capture what the car is doing (not just what it feels like).</p>
+
+      <div class="callout">
+        <strong>“Coming soon” roadmap:</strong> chassis fabrication → rolling chassis → powertrain integration → electronics + dash → first shakedown testing → iteration.
+      </div>
+    </section>
+
+    <section class="panel" style="margin-top:16px;" aria-label="Gallery">
+      <h2>Gallery</h2>
+      <p class="meta">Early build photos and prototypes will live here.</p>
+
+      <div class="gallery-grid">
+        <figure class="gallery-item">
+          <img src="images/F600Car/chassis-fixture.jpg" alt="Chassis in weld fixture placeholder">
+          <figcaption class="gallery-caption">Chassis in weld fixture (placeholder)</figcaption>
+        </figure>
+
+        <figure class="gallery-item">
+          <img src="images/F600Car/esp32-dash.jpg" alt="ESP32 dash prototype lit up placeholder">
+          <figcaption class="gallery-caption">ESP32 dash prototype lit up (placeholder)</figcaption>
+        </figure>
+
+        <figure class="gallery-item">
+          <img src="images/F600Car/cad-layout.jpg" alt="CAD packaging layout placeholder">
+          <figcaption class="gallery-caption">CAD packaging layout (placeholder)</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="panel" style="margin-top:16px;" aria-label="Technical Notes">
+      <h2>Technical Notes</h2>
+      <p>
+        This section will document design decisions, calculations, and test results as the build progresses—so it’s not just a cool project,
+        but a real engineering log.
+      </p>
+
+      <p><strong>Design decisions I’m documenting:</strong></p>
+      <ul class="list">
+        <li>Tube sizing + triangulation choices and how they affect torsional stiffness.</li>
+        <li>Engine + chain line packaging, sprocket ratios, and diff selection trade-offs.</li>
+        <li>Cooling, vibration isolation, and service access (the stuff that makes a car reliable).</li>
+        <li>Dash + sensor architecture, sampling rates, filtering, and logging format.</li>
+      </ul>
+
+      <p style="margin-top:14px;"><strong>Snippets (placeholders — I’ll replace with real numbers + plots):</strong></p>
+
+      <pre><code>// Torsional stiffness test plan (placeholder)
+Inputs:
+  - Apply known torque T at front bulkhead
+  - Measure twist angle theta between front and rear
+Compute:
+  - K_torsion = T / theta  [N·m/deg]
+Goal:
+  - Compare versions (tube layout A vs B) and validate against FEA trend</code></pre>
+
+      <pre><code># ESP32 telemetry log format (placeholder)
+timestamp_ms, rpm, speed_mph, oil_psi, coolant_c, throttle_pct, lat_g, long_g
+0123456,     8200, 68.4,     52.1,    93.0,     41.2,         1.32,  -0.18</code></pre>
+
+      <pre><code>; LTspice sensor conditioning (placeholder)
+; Example: strain gauge bridge -> instrumentation amp -> anti-alias RC -> ADC
+; Goals:
+;  - stable gain
+;  - noise control
+;  - predictable bandwidth for logging</code></pre>
+    </section>
+
+    <footer>
+      <small>© <span id="year"></span> Luke H • Berkeley Blue & Gold theme</small>
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
